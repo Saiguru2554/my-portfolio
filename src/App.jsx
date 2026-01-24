@@ -8,7 +8,7 @@ import Experiments from './components/Experiments';
 import Badges from './components/Badges';
 
 // RESUME CONFIGURATION
-const FILE_ID = "1pxmJ6GL3sD4vlVFwsXs-hKIvml2iGmjW"; 
+const FILE_ID = "11wrHMr7hR63qfO-OI-IK-dt9wOfc15ah"; 
 const RESUME_VIEW_URL = `https://drive.google.com/file/d/${FILE_ID}/view?usp=drive_link`;
 const RESUME_DOWNLOAD_URL = `https://drive.google.com/uc?export=download&id=${FILE_ID}`;
 
