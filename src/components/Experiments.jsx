@@ -1,67 +1,104 @@
-// src/components/Experiments.js
-
 import React, { useState, useEffect, useRef } from 'react';
 import { experiments } from '../data/portfolioData';
+import '../App.css'; 
 
-function Experiments() {
+const Experiments = () => {
   const [activeId, setActiveId] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   
-  // We use references to track the DOM elements for the scroll observer
+  // Refs for scroll detection and click outside
   const itemRefs = useRef([]);
+  const containerRef = useRef(null);
 
-  // --- SCROLL OBSERVER LOGIC ---
+  // 1. Detect Mobile/Desktop
   useEffect(() => {
-    const observerOptions = {
-      root: null, 
-      rootMargin: '-45% 0px -45% 0px', 
-      threshold: 0
-    };
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize(); 
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // 2. SCROLL OBSERVER (DESKTOP ONLY)
+  // This makes the video play when you scroll with 2 fingers on Desktop
+  useEffect(() => {
+    if (isMobile) return; // Disable scroll spy on mobile (Click only)
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const id = Number(entry.target.getAttribute('data-id'));
-          setActiveId(id);
+          setActiveId(Number(entry.target.getAttribute('data-id')));
         }
       });
-    }, observerOptions);
-    itemRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
+    }, { 
+      rootMargin: '-45% 0px -45% 0px', // Trigger exactly in center of screen
+      threshold: 0 
     });
 
-    // Cleanup when leaving the page
-    return () => {
-      if (itemRefs.current) {
-        itemRefs.current.forEach((ref) => {
-          if (ref) observer.unobserve(ref);
-        });
+    itemRefs.current.forEach((ref) => { if (ref) observer.observe(ref); });
+    return () => observer.disconnect();
+  }, [isMobile]); // Re-run if screen size changes
+
+  // 3. CLICK OUTSIDE (MOBILE ONLY)
+  // Closes the video if you click the background
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setActiveId(null); 
       }
     };
-  }, []);
+    if (isMobile) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isMobile]);
+
+  // 4. TOGGLE FUNCTION (Mobile Click)
+  const handleToggle = (id, e) => {
+    if (!isMobile) return; // Desktop uses scroll/hover, not click toggle
+    e.stopPropagation(); 
+    if (activeId === id) {
+      setActiveId(null); // Close
+    } else {
+      setActiveId(id);   // Open
+    }
+  };
 
   const activeExperiment = experiments.find(exp => exp.id === activeId);
 
   return (
-    <div className="experiments-container">
+    <div className="experiments-container" ref={containerRef}>
       
-      {/* LEFT SIDE: THE LIST */}
-      <div 
-        className="experiments-list" 
-        // If they physically move the mouse OUT of the list, hide the video
-        onMouseLeave={() => setActiveId(null)}
-      >
+      {/* PREVIEW AREA */}
+      <div className={`experiments-preview ${activeId ? 'is-active' : ''}`} onClick={(e) => isMobile && e.stopPropagation()}>
+        {activeExperiment && (
+          <div className="preview-media-wrapper fade-in" key={activeExperiment.id}>
+            {activeExperiment.type === 'video' ? (
+              <video key={activeExperiment.src} src={activeExperiment.src} autoPlay muted loop playsInline className="preview-media" />
+            ) : activeExperiment.type === 'stack' ? (
+              <div className="card-stack-wrapper">
+                {activeExperiment.images.map((img, i) => <img key={i} src={img} className="stack-card" alt="" />)}
+              </div>
+            ) : (
+               <img src={activeExperiment.images[0]} className="preview-media" alt="" />
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* LIST AREA */}
+      <div className="experiments-list" onMouseLeave={() => !isMobile && setActiveId(null)}>
         {experiments.map((exp, index) => (
-          <div 
+          <div
             key={exp.id}
-            // CRITICAL: Assign the ID to the DOM element so the Scroll Observer can read it
             data-id={exp.id}
-            // CRITICAL: Assign the ref so the Observer can watch it
             ref={el => itemRefs.current[index] = el}
-            
             className={`experiment-item ${activeId === exp.id ? 'active' : ''}`}
             
-            // MOUSE INTERACTION: Instant update if they use the cursor
-            onMouseEnter={() => setActiveId(exp.id)}
+            // MOBILE: Click Toggle
+            onClick={(e) => handleToggle(exp.id, e)}
+            
+            // DESKTOP: Hover Trigger
+            onMouseEnter={() => !isMobile && setActiveId(exp.id)}
           >
             <span className="exp-number">0{exp.id}</span>
             <span className="exp-title">{exp.title}</span>
@@ -69,43 +106,6 @@ function Experiments() {
         ))}
       </div>
 
-      {/* RIGHT SIDE: THE PREVIEW */}
-      <div className="experiments-preview">
-        {activeExperiment ? (
-          <div className="preview-media-wrapper fade-in" key={activeExperiment.id}>
-            
-            {/* TYPE 1: VIDEO */}
-            {activeExperiment.type === 'video' && (
-              <video
-                src={activeExperiment.src}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="preview-media"
-              />
-            )}
-
-            {/* TYPE 2: CARD STACK */}
-            {activeExperiment.type === 'stack' && (
-              <div className="card-stack-wrapper">
-                {activeExperiment.images.map((imgSrc, index) => (
-                  <img 
-                    key={index} 
-                    src={imgSrc} 
-                    alt={`stack-${index}`} 
-                    className="stack-card" 
-                  />
-                ))}
-              </div>
-            )}
-            
-          </div>
-        ) : (
-          /* Empty Placeholder to keep layout stable */
-          <div style={{ width: '100%', height: '100%' }}></div>
-        )}
-      </div>
     </div>
   );
 }

@@ -534,8 +534,9 @@ body.dark-mode .about-page-container .content-section {
   box-shadow: none; 
 }
 
-/* --- EXPERIMENTS SECTION (Short Lines, Full-Screen Trigger) --- */
-
+/* =================================================================
+   DESKTOP STYLES (Unchanged)
+   ================================================================= */
 .experiments-container {
   width: 100vw; 
   margin-left: calc(50% - 50vw); 
@@ -547,140 +548,182 @@ body.dark-mode .about-page-container .content-section {
   min-height: 100vh;
 }
 
-/* 1. THE LIST (Z-Index 2: Sits on Top to catch hovers) */
+/* LIST */
 .experiments-list {
-  grid-column: 1 / -1;
-  grid-row: 1 / -1;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  padding-top: 15vh; 
-  padding-bottom: 20vh;
-  z-index: 2; 
+  grid-column: 1 / -1; grid-row: 1 / -1; width: 100%;
+  display: flex; flex-direction: column; padding-top: 15vh; padding-bottom: 20vh; z-index: 5; 
 }
 
 .experiment-item {
-  position: relative;
-  width: 100%; 
-  display: flex;
-  align-items: flex-start; 
-  gap: 20px;
-  
-  padding: 50px 4vw; 
-  cursor: pointer;
-  transition: all 0.3s ease;
-  justify-content: flex-start;
-  text-align: left;
-  color: var(--text-color);
-  background: transparent; 
+  position: relative; width: 100%; display: flex; align-items: flex-start; gap: 20px;
+  padding: 50px 4vw; cursor: pointer; transition: all 0.3s ease;
+  justify-content: flex-start; text-align: left; color: var(--text-color); background: transparent; 
 }
-
-/* --- CUSTOM BOTTOM LINE (Only 45% Width) --- */
 .experiment-item::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 45%; 
-  height: 1px;
-  background-color: var(--border-color);
-  transition: width 0.3s ease; 
+  content: ''; position: absolute; bottom: 0; left: 0; width: 45%; height: 1px; background-color: var(--border-color); transition: width 0.3s ease; 
 }
-
-/* --- CUSTOM TOP LINE FOR FIRST ITEM (Only 45% Width) --- */
 .experiment-item:first-child::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 45%;
-  height: 1px;
-  background-color: var(--border-color);
+  content: ''; position: absolute; top: 0; left: 0; width: 45%; height: 1px; background-color: var(--border-color);
 }
+.exp-number { font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; color: var(--primary-color); margin-top: 15px; min-width: 30px; }
+.exp-title { font-family: 'Space Grotesk', sans-serif; font-size: 6rem; font-weight: 800; line-height: 0.9; letter-spacing: -3px; color: inherit; margin: 0; text-shadow: 0 2px 10px var(--bg-color); }
+.experiment-item.active, .experiment-item:hover { color: var(--primary-color); }
+.experiment-item.active::after, .experiment-item:hover::after, .experiment-item.active:first-child::before, .experiment-item:hover:first-child::before { background-color: var(--primary-color); }
 
-
-.exp-number {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.2rem;
-  color: var(--primary-color);
-  margin-top: 15px; 
-  min-width: 30px;
-}
-
-.exp-title {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 6rem; 
-  font-weight: 800;
-  line-height: 0.9;
-  letter-spacing: -3px;
-  color: inherit;
-  margin: 0;
-  /* Shadow ensures text is readable if video slides under it */
-  text-shadow: 0 2px 10px var(--bg-color);
-}
-
-/* HOVER STATE */
-.experiment-item.active, 
-.experiment-item:hover {
-  color: var(--primary-color);
-}
-
-/* OPTIONAL: Highlight the line on hover too */
-.experiment-item.active::after,
-.experiment-item:hover::after,
-.experiment-item.active:first-child::before,
-.experiment-item:hover:first-child::before {
-   background-color: var(--primary-color);
-}
-
-
-/* 2. THE PREVIEW (Z-Index 1: Sits Behind) */
+/* PREVIEW */
 .experiments-preview {
-  grid-column: 1 / -1;
-  grid-row: 1 / -1;
-  
-  position: sticky; 
-  top: 0;
-  height: 100vh;
-  
-  pointer-events: none; 
-  
-  display: flex;
-  justify-content: flex-end; 
-  align-items: center;
-  
-  padding-right: 50px; 
-  z-index: 1; 
+  grid-column: 1 / -1; grid-row: 1 / -1; position: sticky; top: 0; height: 100vh;
+  pointer-events: none; display: flex; justify-content: flex-end; align-items: center; padding-right: 50px; z-index: 1; 
 }
-
-.fade-in {
-  animation: fadeIn 0.3s ease forwards;
-  display: flex;
-  justify-content: flex-end;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.preview-media-wrapper {
-  width: 50vw; 
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-}
-
+.preview-media-wrapper { width: 50vw; display: flex; justify-content: flex-end; align-items: center; }
 .preview-media {
-  width: 100%;
-  max-width: 700px; 
-  height: auto;
-  max-height: 75vh; 
-  object-fit: contain;
-  border-radius: 20px;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.5);
-  border: 1px solid rgba(255,255,255,0.1);
-  background: #000;
+  width: 100%; max-width: 700px; height: auto; max-height: 75vh; object-fit: contain; border-radius: 20px;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); background: #000;
+}
+.fade-in { animation: fadeIn 0.3s ease forwards; display: flex; justify-content: flex-end; }
+@keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+
+/* =================================================================
+   MOBILE OPTIMIZATION (Reverted to Fixed Popup)
+   ================================================================= */
+@media (max-width: 768px) {
+  
+  /* 1. NAVBAR: ORIGINAL SIZE + SCROLLABLE */
+  nav {
+    z-index: 99999 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    
+    /* Restore Original Height/Padding */
+    height: auto !important; 
+    min-height: 80px !important; 
+    padding: 20px 20px !important; 
+    
+    /* Horizontal Scroll Logic */
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important; 
+    overflow-x: auto !important; 
+    white-space: nowrap !important; 
+    gap: 40px !important; 
+    
+    background: var(--bg-color, #fff) !important;
+    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+    
+    /* Hide Scrollbar */
+    -webkit-overflow-scrolling: touch; 
+    scrollbar-width: none; 
+  }
+  
+  nav::-webkit-scrollbar { display: none; }
+
+  /* Keep Logo & Text Original Size */
+  nav .logo, nav img, nav svg {
+    height: auto !important;
+    max-height: 50px !important;
+    flex-shrink: 0 !important;
+  }
+  
+  nav a, nav li {
+    font-size: 18px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* 2. MAIN CONTAINER */
+  .experiments-container {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100vw !important;
+    margin-left: calc(50% - 50vw) !important;
+    margin-right: calc(50% - 50vw) !important;
+    padding: 0 !important;
+    min-height: auto !important;
+    overflow-x: hidden !important;
+  }
+
+  /* 3. THE LIST */
+  .experiments-list {
+    width: 100% !important;
+    /* Push down to clear larger Navbar */
+    padding-top: 100px !important; 
+    padding-bottom: 80px !important;
+    z-index: 5 !important;
+  }
+
+  .experiment-item {
+    padding: 30px 20px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    background: var(--bg-color, #0d0d0d) !important; 
+    z-index: 6 !important;
+  }
+
+  .exp-title {
+    font-size: 2.2rem !important;
+  }
+  
+  .experiment-item::after, .experiment-item:first-child::before {
+    width: 100% !important;
+  }
+
+  /* 4. PREVIEW: CENTERED PHONE CARD */
+  .experiments-preview {
+    display: none !important; 
+    position: fixed !important;
+    
+    /* Exact Center */
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    
+    /* Phone Dimensions */
+    width: 280px !important; 
+    aspect-ratio: 9/16 !important; 
+    height: auto !important;
+    
+    z-index: 9999 !important; 
+    
+    /* Allow clicks to pass through to list behind */
+    pointer-events: none !important; 
+    
+    padding: 0 !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+
+  .experiments-preview.is-active {
+    display: flex !important;
+    animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  .preview-media-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    
+    /* Re-enable clicks on the video itself */
+    pointer-events: auto !important; 
+    
+    /* Styling */
+    border-radius: 30px !important; 
+    overflow: hidden !important;
+    box-shadow: 0 30px 60px -10px rgba(0, 0, 0, 0.9) !important;
+    border: 4px solid #1a1a1a !important; 
+    background: #000 !important;
+  }
+
+  .preview-media {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: translate(-50%, -45%) scale(0.9); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
 }
 
 /* --- CARD STACK --- */
