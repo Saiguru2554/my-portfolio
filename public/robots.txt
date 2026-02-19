@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Tell Google exactly where your sitemap is
+Sitemap: https://saiguru.vercel.app/sitemap.xml
