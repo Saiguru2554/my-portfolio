@@ -5,7 +5,6 @@ const sequences = {
   tech: [
     '/assets/tech-1.webp', 
     '/assets/tech-2.webp', 
-    '/assets/tech-3.webp',
     '/assets/tech-4.webp', 
     '/assets/tech-5.webp', 
     '/assets/tech-6.webp'
